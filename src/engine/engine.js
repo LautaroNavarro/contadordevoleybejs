@@ -47,10 +47,6 @@ class Match {
         return new Date();
     }
 
-    validateCanAddPoints() {
-
-    }
-
     addPointTeam (team) {
         if (this.status == this.constructor.FINISHED_STATUS) {
             throw new Error('Operation denied');
