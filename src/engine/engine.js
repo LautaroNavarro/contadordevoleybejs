@@ -61,7 +61,9 @@ class Match {
         this.sets[index][team_points] = this.sets[index][team_points] + 1;
         if (
             this.sets[index][team_points] >= (this.sets[index][other_team_points] + this.points_difference ) &&
-            this.sets[index][team_points] >= this.set_points_number
+            this.sets[index][team_points] >= this.set_points_number || 
+            this.sets.length == (this.sets_number) && this.sets[index][team_points] >= (this.sets[index][other_team_points] + this.points_difference ) &&
+            this.sets[index][team_points] >= this.tie_break_points
         ) {
             // The set finished?
 
@@ -69,7 +71,6 @@ class Match {
             this.sets[index].winner = team_points; // Register that this set was winned by the team
 
             if (
-                this.sets_number == 1 && this.teams[team_points].sets == 1 ||
                 this.teams[team_points].sets >= Math.ceil(this.sets_number / 2)
             ){
                 // The match finished?
@@ -82,12 +83,23 @@ class Match {
         }
     }
 
-    substractPointTeamOne () {
-
-    }
-
-    substractPointTeamTwo () {
-
+    substractPointTeam (team) {
+        if (this.status == this.constructor.FINISHED_STATUS) {
+            throw new Error('Operation denied');
+        }
+        let index = this.sets.length - 1;
+        let team_points = team == 1 ? 'team_one' : 'team_two';
+        if (this.sets[index][team_points] == 0){
+            if (this.sets.length == 1){
+                throw new Error('Operation denied');
+            }
+            this.sets.pop();
+            let index = this.sets.length - 1;
+            this.sets[index].winner = null;
+            this.sets[index][team_points] = this.sets[index][team_points] - 1;
+            return null
+        }
+        this.sets[index][team_points] = this.sets[index][team_points] - 1;
     }
 
 }

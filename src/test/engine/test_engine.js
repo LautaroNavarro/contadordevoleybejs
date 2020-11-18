@@ -249,7 +249,7 @@ describe('Engine', function() {
             assert.equal(match.sets[2].team_one, 0);
             assert.equal(match.sets[2].team_two, 0);
             assert.equal(match.sets[2].winner, null);
-            for (var i = 1; i <= 25; i++) {
+            for (var i = 1; i <= 15; i++) {
                 match.addPointTeam(1);
             }
             assert.equal(match.winner, 'team_one');
@@ -261,9 +261,94 @@ describe('Engine', function() {
             assert.equal(match.sets[1].team_one, 0);
             assert.equal(match.sets[1].team_two, 25);
             assert.equal(match.sets[1].winner, 'team_two');
-            assert.equal(match.sets[2].team_one, 25);
+            assert.equal(match.sets[2].team_one, 15);
             assert.equal(match.sets[2].team_two, 0);
             assert.equal(match.sets[2].winner, 'team_one');
+
+            assert.throws(() => match.addPointTeam(1), new Error('Operation denied'));
+            assert.throws(() => match.addPointTeam(2), new Error('Operation denied'));
+
+        });
+
+    });
+
+    describe('#substractPointTeam()', function() {
+        it('substract one point to team one', function() {
+            let match = new engine.Match({
+                'teams': {
+                    'team_one': {'name': 'San martin', 'color': '#000111', 'sets': 0},
+                    'team_two': {'name': 'Rivadavia', 'color': '#000111', 'sets': 0},
+                },
+                'sets': [{
+                    'team_one': 15,
+                    'team_two': 12,
+                }],
+            });
+
+            match.substractPointTeam(1);
+            assert.equal(match.sets[0].team_one, 14);
+            assert.equal(match.sets[0].team_two, 12);
+            assert.equal(match.sets.length, 1);
+        });
+        it('substract one point to team one raise error if 0 and sets 1', function() {
+            let match = new engine.Match({
+                'teams': {
+                    'team_one': {'name': 'San martin', 'color': '#000111', 'sets': 0},
+                    'team_two': {'name': 'Rivadavia', 'color': '#000111', 'sets': 0},
+                },
+                'sets': [{
+                    'team_one': 0,
+                    'team_two': 12,
+                }],
+            });
+            assert.throws(() => match.substractPointTeam(1), new Error('Operation denied'));
+            assert.equal(match.sets[0].team_one, 0);
+            assert.equal(match.sets[0].team_two, 12);
+            assert.equal(match.sets.length, 1);
+        });
+
+        it('substract one point to team delete set if 0 and more than one set', function() {
+            let match = new engine.Match({
+                'teams': {
+                    'team_one': {'name': 'San martin', 'color': '#000111', 'sets': 0},
+                    'team_two': {'name': 'Rivadavia', 'color': '#000111', 'sets': 0},
+                },
+                'sets': [
+                    {
+                        'team_one': 25,
+                        'team_two': 13,
+                    },
+                    {
+                        'team_one': 0,
+                        'team_two': 12,
+                    }
+                ],
+            });
+            match.substractPointTeam(1)
+            assert.equal(match.sets[0].team_one, 24);
+            assert.equal(match.sets[0].team_two, 13);
+            assert.equal(match.sets.length, 1);
+        });
+
+        it('substract one point if match is finished raise error', function() {
+            let match = new engine.Match({
+                'teams': {
+                    'team_one': {'name': 'San martin', 'color': '#000111', 'sets': 0},
+                    'team_two': {'name': 'Rivadavia', 'color': '#000111', 'sets': 0},
+                },
+                'sets_number': 1,
+                'sets': [
+                    {
+                        'team_one': 25,
+                        'team_two': 13,
+                    },
+                ],
+                'status': engine.Match.FINISHED_STATUS
+            });
+            assert.throws(() => match.substractPointTeam(1), new Error('Operation denied'));
+            assert.equal(match.sets[0].team_one, 25);
+            assert.equal(match.sets[0].team_two, 13);
+            assert.equal(match.sets.length, 1);
         });
 
     });
