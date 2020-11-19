@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  redis:
+    image: redis
+    command: redis-server --requirepass "redis-password"
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    environment:
+      - REDISHOST=redis
+      - REDISPORT=6379
+      - REDISPASSWORD=redis-password
+    volumes:
+      - ./:/srv/contadordevoleybe/
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis

@@ -2,9 +2,10 @@
   "name": "contadordevoleybejs",
   "version": "0.0.1",
   "description": "This is voley counter be written in nodeJS",
-  "main": "app.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "mocha src/test/*"
+    "test": "mocha src/test/*",
+    "dev": "nodemon"
   },
   "repository": {
     "type": "git",
@@ -16,8 +17,14 @@
     "url": "https://github.com/LautaroNavarro/contadordevoleybejs/issues"
   },
   "homepage": "https://github.com/LautaroNavarro/contadordevoleybejs#readme",
-  "dependencies": {
+  "devDependencies": {
     "mocha": "^8.2.1",
     "sinon": "^9.2.1"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "jsonschema": "^1.4.0",
+    "redis": "^3.0.2",
+    "socket.io": "^3.0.2"
   }
 }

@@ -47,6 +47,22 @@ class Match {
         return new Date();
     }
 
+    json () {
+        return {
+            'id': this.id,
+            'teams': this.teams,
+            'sets_number': this.sets_number,
+            'set_points_number': this.set_points_number,
+            'points_difference': this.points_difference,
+            'tie_break_points': this.tie_break_points,
+            'status': this.status,
+            'created': this.created.toISOString(),
+            'changed': this.changed.toISOString(),
+            'sets': this.sets,
+            'winner': this.winner
+        }
+    }
+
     addPointTeam (team) {
         if (this.status == this.constructor.FINISHED_STATUS) {
             throw new Error('Operation denied');
@@ -77,6 +93,9 @@ class Match {
                 this.sets.push(this.constructor.generateSet());
             }
         }
+        if (this.model) {
+            this.model.save(this);
+        }
     }
 
     substractPointTeam (team) {
@@ -93,9 +112,12 @@ class Match {
             let index = this.sets.length - 1;
             this.sets[index].winner = null;
             this.sets[index][team_points] = this.sets[index][team_points] - 1;
-            return null
+        } else {
+            this.sets[index][team_points] = this.sets[index][team_points] - 1;
         }
-        this.sets[index][team_points] = this.sets[index][team_points] - 1;
+        if (this.model) {
+            this.model.save(this);
+        }
     }
 
 }
