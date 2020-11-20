@@ -14,6 +14,8 @@ class Match {
 
     constructor (matchJson) {
         this.teams = matchJson.teams;
+        this.teams.team_one.sets = matchJson.teams.team_one.sets ? matchJson.teams.team_one.sets : 0;
+        this.teams.team_two.sets = matchJson.teams.team_two.sets ? matchJson.teams.team_two.sets : 0;
         this.sets_number = matchJson.sets_number ? matchJson.sets_number : this.constructor.DEFAULT_SETS_NUMBER;
         this.set_points_number = matchJson.set_points_number ? matchJson.set_points_number : this.constructor.DEFAULT_SET_POINTS_NUMBER;
         this.points_difference = matchJson.points_difference ? matchJson.points_difference : this.constructor.DEFAULT_POINTS_DIFFERENCE;
@@ -21,10 +23,19 @@ class Match {
         this.status = matchJson.status ? matchJson.status : this.constructor.PLAYING_STATUS;
         this.id = matchJson.id ? matchJson.id : this.constructor.generateId();
         this.token = matchJson.token ? matchJson.token : this.constructor.generateToken();
-        this.created = matchJson.created ? matchJson.created : this.constructor.getDateTime();
-        this.changed = matchJson.changed ? matchJson.changed : this.constructor.getDateTime();
+
+        this.created = matchJson.created ? this.constructor.isoToDate(matchJson.created) : this.constructor.getDateTime();
+        this.changed = matchJson.changed ? this.constructor.isoToDate(matchJson.changed) : this.constructor.getDateTime();
         this.sets = matchJson.sets ? matchJson.sets : [this.constructor.generateSet()];
         this.winner = matchJson.winner ? matchJson.winner : null;
+    }
+
+    static isoToDate (date) {
+        if (typeof date === 'string') {
+            return new Date(date);
+        } else {
+            return date;
+        }
     }
 
     static generateSet () {
@@ -56,6 +67,7 @@ class Match {
             'points_difference': this.points_difference,
             'tie_break_points': this.tie_break_points,
             'status': this.status,
+            'token': this.token,
             'created': this.created.toISOString(),
             'changed': this.changed.toISOString(),
             'sets': this.sets,

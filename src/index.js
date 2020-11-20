@@ -7,22 +7,26 @@ const io = require("socket.io")(server, {
     }
 });
 const createMatch = require('./views/createMatch.js');
+const persistence = require('./persistence/match.js');
+const watchsocket = require('./sockets/watch.js');
+const updatesocket = require('./sockets/update.js');
+const cors = require('cors')
 
 app.use(express.json());
+app.use(cors());
 
-app.get('/', function(req, res) {
-    res.send(200, { 'response': 'Hello world' });
-});
-
-app.post('/matches/', function(req, res) {
+app.post('/matches/', (req, res) => {
+    console.log('POST /matches/');
     let result = createMatch.createMatch(req.body);
     res.status(result.status_code).send(result.response);
 });
 
-io.on('connection', function(socket) {
-    socket.emit('123', { message: {'teams': {'team_one': {'color': 'red', 'name': 'team name'}}} });
+io.on('connection', (socket) => {
+    console.log('New socket connection');
+    socket.on('watch', (msg) => {watchsocket.watch(msg, socket)});
+    socket.on('update', (msg) => {updatesocket.update(msg, socket, io)});
 });
 
-server.listen(3000, () => {
-    console.log('Listening on port 3000')
+server.listen(3001, () => {
+    console.log('Listening on port 3001')
 });

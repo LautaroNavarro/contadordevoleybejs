@@ -20,12 +20,14 @@ function save(matchJson){
 }
 
 function get(matchId){
-    let match;
-    client.get(matchId, (err, value) => {match = value});
-    if (match) {
-        match = JSON.parse(match);
-    }
-    return match;
+    return new Promise((fullfill, reject)=>{
+        client.get(matchId, (err, data)=>{
+            if(err)
+                reject(err);
+            else
+                fullfill(data);
+        });
+    });
 }
 
 exports.save = save;
