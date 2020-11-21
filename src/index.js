@@ -27,6 +27,6 @@ io.on('connection', (socket) => {
     socket.on('update', (msg) => {updatesocket.update(msg, socket, io)});
 });
 
-server.listen(3001, () => {
-    console.log('Listening on port 3001')
+server.listen(process.env.PORT, () => {
+    console.log(`Listening on port ${process.env.PORT}`)
 });

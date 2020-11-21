@@ -8,6 +8,7 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     environment:
+      - PORT=3001
       - REDISHOST=redis
       - REDISPORT=6379
       - REDISPASSWORD=redis-password
