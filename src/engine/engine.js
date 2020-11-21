@@ -122,8 +122,9 @@ class Match {
             }
             this.sets.pop();
             let index = this.sets.length - 1;
+            this.teams[this.sets[index].winner].sets = this.teams[this.sets[index].winner].sets - 1;
+            this.sets[index][this.sets[index].winner] = this.sets[index][this.sets[index].winner] - 1;
             this.sets[index].winner = null;
-            this.sets[index][team_points] = this.sets[index][team_points] - 1;
         } else {
             this.sets[index][team_points] = this.sets[index][team_points] - 1;
         }
