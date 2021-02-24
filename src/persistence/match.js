@@ -1,7 +1,13 @@
 
 let redis = require('redis');
-let client = redis.createClient(process.env.REDISPORT, process.env.REDISHOST, {no_ready_check: true});
-client.auth(process.env.REDISPASSWORD, function (err) {
+
+// redis://:password@host:port
+let re = new RegExp('redis:\/\/:(.*)@(.*):(.*)')
+
+let redisConnectionKeys = re.exec(process.env.REDIS_URL)
+
+let client = redis.createClient(redisConnectionKeys[3], redisConnectionKeys[2], {no_ready_check: true});
+client.auth(redisConnectionKeys[1], function (err) {
     if (err) {
         throw err;
     }

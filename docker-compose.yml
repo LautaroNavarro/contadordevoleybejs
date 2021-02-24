@@ -8,10 +8,8 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     environment:
+      - REDIS_URL=redis://:redis-password@redis:6379
       - PORT=3001
-      - REDISHOST=redis
-      - REDISPORT=6379
-      - REDISPASSWORD=redis-password
     volumes:
       - ./:/srv/contadordevoleybe/
     ports:
